@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delete your K&amp;U account · Team M</title>
+<meta name="description" content="Delete your K&amp;U account and its data, from this page or by email. K&amp;U is published by Team M.">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #F0EEE6; --surface: #FAF9F5; --ink: #1F1E1C; --muted: #6E6A62; --clay: #B4552F; --line: #DDD8CC;
+    --danger: #A8321E;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1E1A16; --surface: #28231E; --ink: #EDE8DF; --muted: #B1A99C; --clay: #E08A62; --line: #3E372F; --danger: #F08A70; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 56px 22px 80px; }
+  header { text-align: center; margin-bottom: 40px; }
+  .kicker { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--clay); margin: 0 0 10px; }
+  h1, h2 { font-family: ui-serif, Charter, "Iowan Old Style", Georgia, serif; font-weight: 600; line-height: 1.2; }
+  h1 { font-size: 38px; margin: 0 0 12px; }
+  .standfirst { color: var(--muted); margin: 0 auto; max-width: 34em; }
+  h2 { font-size: 24px; margin: 44px 0 10px; }
+  a { color: var(--clay); overflow-wrap: anywhere; }
+  .box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 22px; margin-top: 16px; }
+  .label { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+  label { display: block; font-size: 15px; margin: 12px 0 6px; }
+  input[type=email], input[type=password] { width: 100%; font: inherit; padding: 11px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+  button { font: inherit; font-weight: 600; min-height: 48px; padding: 0 18px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+  button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  button.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+  button:disabled { opacity: .5; cursor: default; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .check { display: flex; gap: 10px; align-items: flex-start; margin: 16px 0; font-size: 15px; }
+  .check input { width: 20px; height: 20px; margin-top: 3px; flex: none; }
+  .msg { margin: 14px 0 0; font-size: 15px; }
+  .msg.error { color: var(--danger); }
+  ul { padding-left: 1.2em; }
+  li { margin: 4px 0; }
+  [hidden] { display: none !important; }
+  footer { margin-top: 56px; color: var(--muted); font-size: 14px; text-align: center; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="kicker">K&amp;U · Team M</p>
+    <h1>Delete your K&amp;U account</h1>
+    <p class="standfirst">K&amp;U is published on Google Play and the App Store by Team M. One account works in the app and on the K&amp;U campus websites, so deleting it here removes it everywhere.</p>
+  </header>
+
+  <h2>Delete it here</h2>
+  <p>Sign in with the account you want to delete. You do not need the app.</p>
+
+  <div class="box" id="signin">
+    <p class="label">Step 1 · Sign in</p>
+    <form id="emailForm" novalidate>
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <div class="row">
+        <button class="primary" type="submit" id="emailButton">Sign in</button>
+        <button type="button" id="googleButton">Sign in with Google</button>
+      </div>
+    </form>
+    <p class="msg">Signed up with Apple? Apple sign-in is not available on this page yet: delete your account in the app under Settings → Delete account, or <a href="#email-request">ask us by email</a>.</p>
+    <p class="msg error" id="signinError" role="alert" hidden></p>
+  </div>
+
+  <div class="box" id="confirm" hidden>
+    <p class="label">Step 2 · Confirm</p>
+    <p>Signed in as <strong id="who"></strong>.</p>
+    <label class="check"><input type="checkbox" id="understood"> I understand this deletes my account and the data below, and cannot be undone.</label>
+    <div class="row">
+      <button class="danger" type="button" id="deleteButton" disabled>Delete my account</button>
+      <button type="button" id="cancelButton">Cancel</button>
+    </div>
+    <p class="msg error" id="deleteError" role="alert" hidden></p>
+  </div>
+
+  <div class="box" id="done" hidden>
+    <p class="label">Done</p>
+    <p>Your account and the data listed below have been deleted. You have been signed out.</p>
+  </div>
+
+  <h2 id="email-request">Or ask us by email</h2>
+  <p>Email <a href="mailto:TeamMillionM@gmail.com?subject=K%26U%20account%20deletion%20request">TeamMillionM@gmail.com</a> with the subject “K&amp;U account deletion request”, <strong>from the email address of your account</strong> (for Apple sign-in, the address Apple shared with us, which may be a relay address). Never send your password. We may reply to confirm the request is yours, and we delete the account within 30 days.</p>
+
+  <h2>What is deleted</h2>
+  <ul>
+    <li>Your sign-in, so the account can no longer be used.</li>
+    <li>Your profile on every campus: name, country, length of stay, university.</li>
+    <li>Your posts with their replies and likes, your replies to others, and your likes, on every campus board and the board all campuses share.</li>
+    <li>Photos you uploaded with posts.</li>
+    <li>Your live chat messages and presence in every room.</li>
+    <li>Your saved class week and classes you added by hand.</li>
+    <li>Your notification settings, notification history and device tokens, blocks and hidden posts.</li>
+  </ul>
+
+  <h2>What is kept</h2>
+  <ul>
+    <li><strong>Reports you filed</strong> stay with the moderators so they can finish them, without your account identifier. The report's reason and any note you wrote stay with it.</li>
+    <li><strong>Reports other students filed about your posts or messages</strong>, which can name your account identifier and display name, stay with the moderators' decisions so they can finish them and keep the boards safe.</li>
+    <li><strong>Email you sent us</strong>, including a deletion request, stays in our inbox.</li>
+    <li><strong>A photo posted on the website on 1 or 2 August 2026</strong> was stored without an account attached, so deletion cannot find it. If one of those was yours, email us and we remove it.</li>
+  </ul>
+  <p>Deletion takes effect at once. Nothing deleted is kept in a separate copy by us; Google, which hosts our database, may hold it in its own short-lived system backups before they expire.</p>
+
+  <footer>See the <a href="./">K&amp;U Privacy Policy and Terms</a>. Questions: <a href="mailto:TeamMillionM@gmail.com">TeamMillionM@gmail.com</a></footer>
+</main>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js';
+  import { initializeAuth, inMemoryPersistence, browserPopupRedirectResolver, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js';
+
+  // Public web config; the database rules and the backend decide what a signed-in user may do.
+  const app = initializeApp({
+    apiKey: 'AIzaSyBxWfSLdeQinX_221h02_nGIJB6vlwSVuY',
+    authDomain: 'knu-exchange-app.firebaseapp.com',
+    projectId: 'knu-exchange-app',
+    appId: '1:9866224748:web:570bac517abfd8b1ad2449',
+  });
+  // In memory only: the backend wants a sign-in from the last five minutes, so an old session must not carry over.
+  const auth = initializeAuth(app, { persistence: inMemoryPersistence, popupRedirectResolver: browserPopupRedirectResolver });
+  const DELETE_URL = 'https://us-central1-knu-exchange-app.cloudfunctions.net/deleteAccount';
+
+  const $ = id => document.getElementById(id);
+  const show = (el, text) => { el.textContent = text; el.hidden = !text; };
+
+  const errors = {
+    'auth/invalid-credential': 'That email and password do not match an account.',
+    'auth/wrong-password': 'That email and password do not match an account.',
+    'auth/user-not-found': 'That email and password do not match an account.',
+    'auth/invalid-email': 'Enter the email address of your account.',
+    'auth/too-many-requests': 'Too many attempts. Wait a few minutes and try again.',
+    'auth/popup-closed-by-user': '',
+    'auth/cancelled-popup-request': '',
+    'auth/popup-blocked': 'Your browser blocked the Google window. Allow pop-ups for this page and try again.',
+    'auth/network-request-failed': 'No connection. Check your internet and try again.',
+  };
+  const say = error => errors[error?.code] ?? 'Sign-in did not work. Try again, or ask us by email below.';
+
+  function signedIn(user) {
+    $('who').textContent = user.email || 'your account';
+    $('signin').hidden = true;
+    $('confirm').hidden = false;
+    $('understood').checked = false;
+    $('deleteButton').disabled = true;
+    show($('deleteError'), '');
+  }
+
+  $('emailForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    show($('signinError'), '');
+    $('emailButton').disabled = true;
+    try {
+      const { user } = await signInWithEmailAndPassword(auth, $('email').value.trim(), $('password').value);
+      signedIn(user);
+    } catch (error) {
+      show($('signinError'), say(error));
+    } finally {
+      $('emailButton').disabled = false;
+      $('password').value = '';
+    }
+  });
+
+  $('googleButton').addEventListener('click', async () => {
+    show($('signinError'), '');
+    try {
+      const { user } = await signInWithPopup(auth, new GoogleAuthProvider());
+      signedIn(user);
+    } catch (error) {
+      show($('signinError'), say(error));
+    }
+  });
+
+  $('understood').addEventListener('change', () => { $('deleteButton').disabled = !$('understood').checked; });
+
+  $('cancelButton').addEventListener('click', async () => {
+    await signOut(auth);
+    $('confirm').hidden = true;
+    $('signin').hidden = false;
+  });
+
+  $('deleteButton').addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    $('deleteButton').disabled = true;
+    $('deleteButton').textContent = 'Deleting…';
+    show($('deleteError'), '');
+    try {
+      const token = await user.getIdToken(true);
+      const response = await fetch(DELETE_URL, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: {} }),
+      });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok || body?.result?.deleted !== true) {
+        const status = body?.error?.status;
+        throw new Error(status === 'FAILED_PRECONDITION' || status === 'UNAUTHENTICATED'
+          ? 'Your sign-in is too old. Cancel, sign in again, and delete straight away.'
+          : status === 'ABORTED'
+            ? 'A deletion of this account is already running. Wait a minute, then sign in again to check.'
+            : 'Deletion could not be confirmed. Try again, or ask us by email below.');
+      }
+      await signOut(auth).catch(() => {});
+      $('confirm').hidden = true;
+      $('done').hidden = false;
+    } catch (error) {
+      show($('deleteError'), error.message);
+      $('deleteButton').disabled = !$('understood').checked;
+    } finally {
+      $('deleteButton').textContent = 'Delete my account';
+    }
+  });
+</script>
+</body>
+</html>
